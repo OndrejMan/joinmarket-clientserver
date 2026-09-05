@@ -132,6 +132,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: displayall
+          in: query
+          description: include every derived address, including used addresses with no balance
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           $ref: '#/components/responses/Display-200-OK'
