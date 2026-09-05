@@ -32,6 +32,12 @@ class ConfigOverridesTests(unittest.TestCase):
             interface_config.get("BLOCKCHAIN", "rpc_wallet_file"), "jm_wallet_jcs_001"
         )
 
+    def test_blockchain_source_override_is_applied_before_interface_creation(self):
+        interface_config = self.load_with(bs="no-blockchain")
+        self.assertEqual(
+            interface_config.get("BLOCKCHAIN", "blockchain_source"), "no-blockchain"
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
