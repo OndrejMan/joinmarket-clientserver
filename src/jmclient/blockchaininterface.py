@@ -810,7 +810,13 @@ class RegtestBitcoinCoreInterface(BitcoinCoreInterface, RegtestBitcoinCoreMixin)
         self.absurd_fees = False
         self.simulating = False
         self.shutdown_signal = False
-        self.destn_addr = self._rpc("getnewaddress", [])
+        self.destn_addr = None
+
+    def tick_forward_chain(self, n: int) -> None:
+        # A watch-only wallet needs no mining address until mining is requested.
+        if self.destn_addr is None:
+            self.destn_addr = self._rpc("getnewaddress", [])
+        super().tick_forward_chain(n)
 
     def estimate_fee_per_kb(self, tx_fees: int) -> int:
         if not self.absurd_fees:
