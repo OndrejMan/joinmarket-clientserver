@@ -835,6 +835,9 @@ def main():
             usage='usage: %prog [options]',
             description='Runs a webservice which shows the orderbook.')
     add_base_options(parser)
+    parser.add_option('--blockchain-source', action='store', type='string',
+                      dest='blockchain_source', default=None,
+                      help='override blockchain_source from joinmarket.cfg')
     parser.add_option('-H',
                       '--host',
                       action='store',
@@ -850,7 +853,7 @@ def main():
                       help='port to listen on, default=62601',
                       default=62601)
     (options, args) = parser.parse_args()
-    load_program_config(config_path=options.datadir)
+    load_program_config(config_path=options.datadir, bs=options.blockchain_source)
     # needed to display notional units of FB valuation
     bond_exponent = jm_single().config.get("POLICY", "bond_value_exponent")
     try:

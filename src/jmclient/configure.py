@@ -674,7 +674,8 @@ def _remove_unwanted_default_settings(config: ConfigParser) -> None:
             config.remove_section(section)
 
 def load_program_config(config_path: str = "", bs: Optional[str] = None,
-                        plugin_services: List[JMPluginService] = []) -> None:
+                        plugin_services: List[JMPluginService] = [],
+                        rpc_wallet_file: Optional[str] = None) -> None:
     global_singleton.config.read_file(io.StringIO(defaultconfig))
     if not config_path:
         config_path = lookup_appdata_folder(global_singleton.APPNAME)
@@ -708,6 +709,8 @@ def load_program_config(config_path: str = "", bs: Optional[str] = None,
     # interface even in default/new load.
     if bs:
         global_singleton.config.set("BLOCKCHAIN", "blockchain_source", bs)
+    if rpc_wallet_file is not None:
+        global_singleton.config.set("BLOCKCHAIN", "rpc_wallet_file", rpc_wallet_file)
     # Create default config file if not found
     if len(loadedFiles) != 1:
         with open(global_singleton.config_location, "w") as configfile:
