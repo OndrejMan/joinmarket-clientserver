@@ -11,7 +11,7 @@ fi
 
 if [[ $# == 0 ]]; then
     # shellcheck disable=SC2046
-    flake8 $(git ls-files "*.py") --extend-exclude "${EXCLUDE_PATTERNS}"
+    flake8 $(git -c safe.directory="$PWD" ls-files "*.py") --extend-exclude "${EXCLUDE_PATTERNS}"
 else
     flake8 "$@"
 fi
