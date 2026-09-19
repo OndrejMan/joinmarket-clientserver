@@ -115,8 +115,12 @@ def setup_miniircd(pytestconfig):
     miniircd_path = os.path.join(root_path(), 'miniircd', 'miniircd')
     # minor bug in miniircd (seems); need *full* unqualified path for motd file
     motd_path = os.path.join(cwd, 'miniircd', 'testmotd')
+    # miniircd refuses to start as root unless told to stay root explicitly
+    # (e.g. inside a CI container).
+    setuid_flag = " --setuid root" if os.geteuid() == 0 else ""
     for i in range(n_irc):
-        command = f"{miniircd_path} --ports={16667 + i} --motd={motd_path}"
+        command = (f"{miniircd_path} --ports={16667 + i} --motd={motd_path}"
+                   f"{setuid_flag}")
         miniircd_proc = local_command(command, bg=True)
         miniircd_procs.append(miniircd_proc)
     yield
