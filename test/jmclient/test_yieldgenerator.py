@@ -119,6 +119,13 @@ class CreateMyOrdersTests(unittest.TestCase):
                 cjfee_a=10, ordertype='swabsoffer', minsize=100000)
         self.assertEqual(yg.create_my_orders(), [])
 
+    def test_only_dust_confirmed_withdraws_the_offer(self):
+        # A positive confirmed balance can still be too small for an offer.
+        jm_single().DUST_THRESHOLD = 27300
+        yg = create_yg_basic([15000, 0], txfee_contribution=0,
+                cjfee_r=0.00004, ordertype='sw0reloffer', minsize=30000)
+        self.assertEqual(yg.create_my_orders(), [])
+
 
 class OidToOrderTests(unittest.TestCase):
     """Tests YieldGeneratorBasic.oid_to_order."""
