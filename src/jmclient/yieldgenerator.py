@@ -117,7 +117,11 @@ class YieldGeneratorBasic(YieldGenerator):
 
         # sanity check
         assert order['minsize'] >= 0
-        assert order['maxsize'] > 0
+        if order['maxsize'] <= 0:
+            # CoinJoin outputs may be unconfirmed, leaving too little to offer.
+            jlog.info('confirmed balance (' + str(mix_balance[max_mix]) +
+                      ') is below the dust threshold, not offering')
+            return []
         if order['minsize'] > order['maxsize']:
             jlog.info('minsize (' + str(order['minsize']) + ') > maxsize (' + str(
                 order['maxsize']) + ')')
