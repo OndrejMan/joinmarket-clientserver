@@ -17,13 +17,17 @@ def jmwalletd_main():
                       dest='wss_port', default=28283,
                       help='the port over which to serve websocket '
                       'subscriptions, default 28283')
+    parser.add_option('--rpc-wallet-file', action='store', type='string',
+                      dest='rpc_wallet_file', default=None,
+                      help='override the Bitcoin Core wallet from joinmarket.cfg')
 
     # TODO: remove the non-relevant base options:
     add_base_options(parser)
 
     (options, args) = parser.parse_args()
 
-    load_program_config(config_path=options.datadir)
+    load_program_config(config_path=options.datadir,
+                        rpc_wallet_file=options.rpc_wallet_file)
 
     if jm_single().bc_interface is None:
         jlog.error("Running jmwallet-daemon requires configured " +
