@@ -30,6 +30,13 @@ jlog = get_log()
 
 api_version_string = "/api/v1"
 
+
+def request_bool_arg(request, name):
+    """Read a conventional true/false query argument, defaulting to false."""
+    values = request.args.get(name.encode(), [])
+    return bool(values) and values[0].strip().lower() in (b"1", b"true", b"yes", b"on")
+
+
 # for debugging; twisted.web.server.Request objects do not easily serialize:
 def print_req(request):
     print(request)
@@ -666,7 +673,10 @@ class JMWalletDaemon(Service):
                 jlog.warn("called displaywallet with wrong wallet")
                 raise InvalidRequestFormat()
             else:
-                walletinfo = wallet_display(self.services["wallet"], False, jsonified=True)
+                walletinfo = wallet_display(
+                    self.services["wallet"], False,
+                    displayall=request_bool_arg(request, "displayall"),
+                    jsonified=True)
                 return make_jmwalletd_response(request, walletname=walletname, walletinfo=walletinfo)
 
         @app.route('/wallet/<string:walletname>/rescanblockchain/<int:blockheight>', methods=['GET'])
